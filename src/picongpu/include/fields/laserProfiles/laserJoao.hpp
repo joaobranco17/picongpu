@@ -91,12 +91,12 @@ HINLINE float3_X laserLongitudinal(uint32_t currentStep, float_X& phase)
 HDINLINE float3_X laserTransversal(float3_X elong, const float_X, const float_X posX, const float_X posZ)
 {
 
-    const float_X exp_x = posX * posX / (W0_X * W0_X);
-    const float_X exp_z = posZ * posZ / (W0_Z * W0_Z);
+    const float_64 exp_x = float_64(posX) * float_64(posX) / (W0_X * W0_X);
+    const float_64 exp_z = posZ * posZ / (W0_Z * W0_Z);
 
-    const float_X argCosh = Q_COS * posX / (PI * W0_X* W0_X);
-    const float_X cosh =  0.5 * (math::exp( argCosh ) + math::exp( -argCosh ));
-    const float_X ExpSigma = math::exp( float_X(-1.0)*( Q_COS * Q_COS / (4 * PI * PI * W0_X * W0_X)));
+    const float_64 argCosh = Q_COS * posX / (PI * W0_X* W0_X);
+    const float_64 cosh =  0.5 * (math::exp( argCosh ) + math::exp( -argCosh ));
+    const float_64 ExpSigma = math::exp( float_64(-1.0)*( Q_COS * Q_COS / (4 * PI * PI * W0_X * W0_X)));
 
     //    printf("joao laser: %f  <  %f \n", posX, 0.5 * jetWidth);
     if ( (math::abs( posX )  <  0.5 * jetWidth) ||  ( (math::abs( posX ) > 20.* W0_X)  || (math::abs( posZ ) > 20.* W0_Z) ))
@@ -105,9 +105,9 @@ HDINLINE float3_X laserTransversal(float3_X elong, const float_X, const float_X 
     }
     else
     {
-        const float3_X ret = elong/(p + h * ExpSigma ) * math::exp( float_X(-1.0)*(exp_x + exp_z)) * (p + h * ExpSigma * cosh);
+        const float3_64 ret = precisionCast<float_64>(elong)/(p + h * ExpSigma ) * math::exp( float_64(-1.0)*(exp_x + exp_z)) * (p + h * ExpSigma * cosh);
         //printf("JoaoLaser: E=%f  x=%f  z=%f \n", math::abs(ret), posX, posZ);
-        return ret;
+        return precisionCast<float_X>(ret);
     }
 }
 
